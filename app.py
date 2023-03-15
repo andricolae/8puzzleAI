@@ -113,24 +113,23 @@ class Puzzle:
             self.open.sort(key = lambda x:x.fval,reverse=False)
             
 application = Puzzle(3)
-print("Introduceti tabloul de start \n")
+print("Waiting for the start puzzle...\n")
 start = application.accept()
 
 # Test if init puzzle is solvable  
 def isSolvable(puzzle) :
     inv_count = 0
-    empty_value = -1
     arr = [j for sub in puzzle for j in sub]
     for i in range(0, 9):
         for j in range(i + 1, 9):
             if arr[j] == '_' or arr[i] == '_':
                 continue
-            if int(arr[j]) != empty_value and int(arr[i]) != empty_value and int(arr[i]) > int(arr[j]):
+            if int(arr[i]) > int(arr[j]):
                 inv_count += 1
     return (inv_count % 2 == 0)
 
 if(isSolvable(start)) :
-    print("Tablou initial rezolvabil. Ruleaza...")
+    print("Input puzzle solvable! Running...")
     sleep(1)
     start_time = time.time()
     application.run(start)
@@ -138,14 +137,11 @@ if(isSolvable(start)) :
     print("%s seconds" % (time.time() - start_time))
 else :
     while(isSolvable(start) == False) :
-        print("Tabloul initial nu este rezolvabil! Incercati din nou...")
+        print("Input puzzle not solvable! Try another input...")
         start = application.accept()
-    print("Tablou initial rezolvabil. Ruleaza...")
-    sleep(1)
+    print("Input puzzle solvable! Running...")
+    sleep(0.75)
     start_time = time.time()
     application.run(start)
     print("")
     print("%s seconds" % (time.time() - start_time))
-        
-    
-    
