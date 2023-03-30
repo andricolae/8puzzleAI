@@ -9,10 +9,8 @@ class Node:
         self.fval = fval
 
     def generate_child(self):
-        # Pos of the blank cell
         x, y = self.find(self.data,'_')
         
-        # Values for the 4 movements available
         val_list = [[x,y-1],[x,y+1],[x-1,y],[x+1,y]]
         children = []
         
@@ -24,7 +22,6 @@ class Node:
         return children
         
     def shuffle(self,puz,x1,y1,x2,y2):
-        # Move blank space in given direction
         if x2 >= 0 and x2 < len(self.data) and y2 >= 0 and y2 < len(self.data):
             temp_puz = []
             temp_puz = self.copy(puz)
@@ -42,14 +39,13 @@ class Node:
             for j in i:
                 t.append(j)
             temp.append(t)
-        return temp    
+        return temp
             
     def find(self,puz,x):
         for i in range(0,len(self.data)):
             for j in range(0,len(self.data)):
                 if puz[i][j] == x:
                     return i,j
-
 
 class Puzzle:
     
@@ -66,11 +62,9 @@ class Puzzle:
         return puz
 
     def f(self,start,goal):
-        # Compute heuristic value f(x) = h(x) + g(x)
         return self.h(start.data,goal)+start.level
 
     def h(self,start,goal):
-        # Compute identity between start and goal puzzle
         temp = 0
         for i in range(0,self.dim):
             for j in range(0,self.dim):
@@ -79,9 +73,7 @@ class Puzzle:
         return temp
 
     def run(self, start):
-        #start = self.accept()
         goal = [['1', '2', '3'], ['4', '5', '6'],[ '7', '8', '_']]
-        #goal = self.accept()
         
         start = Node(start,0,0)
         start.fval = self.f(start,goal)
@@ -90,24 +82,24 @@ class Puzzle:
         print("\n")
         counter = 0
         while True:
-            cur = self.open[0]
+            curr = self.open[0]
             counter += 1
             print("\n")
             print("  %s" % counter)
             print("  | ")
             print("  | ")
             print(" \\\'/ ")
-            for i in cur.data:
+            for i in curr.data:
                 for j in i:
                     print(j,end=" ")
                 print("")
             
-            if(self.h(cur.data,goal) == 0):
+            if(self.h(curr.data,goal) == 0):
                 break
-            for i in cur.generate_child():
+            for i in curr.generate_child():
                 i.fval = self.f(i,goal)
                 self.open.append(i)
-            self.closed.append(cur)
+            self.closed.append(curr)
             del self.open[0]
 
             self.open.sort(key = lambda x:x.fval,reverse=False)
@@ -116,7 +108,6 @@ application = Puzzle(3)
 print("Waiting for the start puzzle...\n")
 start = application.accept()
 
-# Test if init puzzle is solvable  
 def isSolvable(puzzle) :
     inv_count = 0
     arr = [j for sub in puzzle for j in sub]
@@ -130,18 +121,20 @@ def isSolvable(puzzle) :
 
 if(isSolvable(start)) :
     print("Input puzzle solvable! Running...")
-    sleep(1)
+    sleep(0.5)
     start_time = time.time()
     application.run(start)
+    stop_time = time.time()
     print("")
-    print("%s seconds" % (time.time() - start_time))
+    print("%s seconds" % (stop_time - start_time))
 else :
     while(isSolvable(start) == False) :
         print("Input puzzle not solvable! Try another input...")
         start = application.accept()
     print("Input puzzle solvable! Running...")
-    sleep(0.75)
+    sleep(0.5)
     start_time = time.time()
     application.run(start)
+    stop_time = time.time()
     print("")
-    print("%s seconds" % (time.time() - start_time))
+    print("%s seconds" % (stop_time - start_time))
